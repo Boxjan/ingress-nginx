@@ -37,6 +37,9 @@ const SlowEchoService = "slow-echo"
 // HTTPBinService name of the deployment for the httpbin app
 const HTTPBinService = "httpbin"
 
+// NginxBaseImage use for testing
+const NginxBaseImage = "k8s.gcr.io/ingress-nginx/nginx:v20210530-g6aab4c291@sha256:a7356029dd0c26cc3466bf7a27daec0f4df73aa14ca6c8b871a767022a812c0b"
+
 // NewEchoDeployment creates a new single replica deployment of the echoserver image in a particular namespace
 func (f *Framework) NewEchoDeployment() {
 	f.NewEchoDeploymentWithReplicas(1)
@@ -52,7 +55,7 @@ func (f *Framework) NewEchoDeploymentWithReplicas(replicas int) {
 // replicas is configurable and
 // name is configurable
 func (f *Framework) NewEchoDeploymentWithNameAndReplicas(name string, replicas int) {
-	deployment := newDeployment(name, f.Namespace, "k8s.gcr.io/ingress-nginx/e2e-test-echo@sha256:d34944a61a65382e9a81f5e28e981187b419b9d579322277c5a98c2857fd7c5e", 80, int32(replicas),
+	deployment := newDeployment(name, f.Namespace, "k8s.gcr.io/ingress-nginx/e2e-test-echo@sha256:b13e44f7bb6852b90633957e743e4a2b34f32f1694da556a9131b43950b8b2b1", 80, int32(replicas),
 		nil,
 		[]corev1.VolumeMount{},
 		[]corev1.Volume{},
@@ -139,7 +142,7 @@ func (f *Framework) NGINXWithConfigDeployment(name string, cfg string) {
 	}, metav1.CreateOptions{})
 	assert.Nil(ginkgo.GinkgoT(), err, "creating configmap")
 
-	deployment := newDeployment(name, f.Namespace, "k8s.gcr.io/ingress-nginx/nginx:v20210104-g2254a9186@sha256:edd1d06bc6892b0dfb42de7d782ceb3c50eec843b09024abf3f95ba23f4feed5", 80, 1,
+	deployment := newDeployment(name, f.Namespace, NginxBaseImage, 80, 1,
 		nil,
 		[]corev1.VolumeMount{
 			{
